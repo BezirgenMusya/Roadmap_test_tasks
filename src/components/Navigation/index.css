@@ -1,0 +1,8 @@
+.header_navigationBlock a {
+  padding-right: 55px;
+  background-color: red;
+}
+
+.activeLink {
+  background-color: red;
+}
