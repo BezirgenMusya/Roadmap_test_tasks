@@ -1,22 +1,19 @@
 import React from "react";
+import "./index.css";
+import { additionalData } from "../../assets/additionalData";
 import { NavLink } from "react-router-dom";
 
 const Navigation = () => {
   return (
-    <div style={{ background: "red" }} className="header_navigationBlock">
-      <NavLink
-        to="/"
-        className={({ isActive }) => (isActive ? "activeLink" : null)}
-      >
-        Check React Hook From
-      </NavLink>
-
-      <NavLink
-        to="/formik"
-        className={({ isActive }) => (isActive ? "activeLink" : null)}
-      >
-        Check Formik
-      </NavLink>
+    <div className="header_navigationBlock">
+      {additionalData.navigationsLink.map((item) => (
+        <NavLink
+          to={item.toWhere}
+          className={({ isActive }) => (isActive ? "activeLink" : null)}
+        >
+          {item.title}
+        </NavLink>
+      ))}
     </div>
   );
 };
