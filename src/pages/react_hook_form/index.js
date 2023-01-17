@@ -21,4 +21,5 @@ const ReactHookForm = () => {
     </div>
   );
 };
+
 export default ReactHookForm;
