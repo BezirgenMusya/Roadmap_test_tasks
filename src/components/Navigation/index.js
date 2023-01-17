@@ -8,6 +8,7 @@ const Navigation = () => {
     <div className="header_navigationBlock">
       {additionalData.navigationsLink.map((item) => (
         <NavLink
+          key={item.toWhere}
           to={item.toWhere}
           className={({ isActive }) => (isActive ? "activeLink" : null)}
         >
