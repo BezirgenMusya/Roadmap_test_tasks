@@ -1,22 +1,8 @@
 import "./styles.css";
 import { Route, Routes } from "react-router-dom";
-import Navigation from "./components/Navigation";
-
-const TestComponent = () => {
-  return (
-    <div>
-      <h1>TestComponent</h1>
-    </div>
-  );
-};
-
-const Main = () => {
-  return (
-    <div>
-      <h1>Main</h1>
-    </div>
-  );
-};
+import Navigation from "./components/Navigation/index.js";
+import Formik from "./pages/formik/index.js";
+import ReactHookForm from "./pages/react_hook_form/index.js";
 
 export default function App() {
   return (
@@ -27,8 +13,8 @@ export default function App() {
 
       <div>
         <Routes>
-          <Route index path={"/"} element={<Main />} />
-          <Route path={"/formik"} element={<TestComponent />} />
+          <Route index path={"/"} element={<ReactHookForm />} />
+          <Route path={"/formik"} element={<Formik />} />
         </Routes>
       </div>
     </div>
