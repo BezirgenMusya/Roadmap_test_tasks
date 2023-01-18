@@ -10,24 +10,28 @@ const ReactHookForm = () => {
     secondQuestionAnswer: null,
   });
 
+  console.log(Object.keys(additionalData.questions));
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
     clearErrors,
-    resetField,
-  } = useForm();
+  } = useForm({
+    defaultValues:{
+      secondQuestion_answer: "",
+    }
+  });
 
   const onSubmit = (data) => {
-    if (Object.values(data).some((item) => item === true)) {
-      const selectedAnsverId = Object.values(data).findIndex((item) => item === true)
+    if (Object.values(data).some((item) => item.length)) {
+      const selectedAnsverId = Object.values(data).findIndex((item) => item.length)
       setQuestionNum("secondQuestion")
       if (questionNum === "firstQuestion") {
-        setResult(prev => ({ ...prev, frirstQuestionAnswer: Object.keys(data)[selectedAnsverId] }))
-        resetField(Object.keys(data)[selectedAnsverId])
+        setResult(prev => ({ ...prev, frirstQuestionAnswer: Object.values(data)[selectedAnsverId] }))
       } else {
-        setResult(prev => ({ ...prev, secondQuestionAnswer: Object.keys(data)[selectedAnsverId] }))
+        setResult(prev => ({ ...prev, secondQuestionAnswer: Object.values(data)[selectedAnsverId] }))
       }
     } else {
       setError("requiredOne", { message: "Please select one answer" })
@@ -41,9 +45,10 @@ const ReactHookForm = () => {
   return (
     <div>
       <h1>React Hook Form</h1>
+      
 
       {
-        result.secondQuestionAnswer
+        result.secondQuestionAnswer?.length
           ? <div>
             <h2>Congrats you are fag</h2>
           </div>
@@ -59,6 +64,7 @@ const ReactHookForm = () => {
                     registerName={item.registerName}
                     label={item.label}
                     register={register}
+                    defaultValue={item.defaultValue}
                   />
                 )
               })}
