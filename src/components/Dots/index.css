@@ -1,0 +1,16 @@
+.dotsContainer{
+    display: inline-block;
+    margin: 5px;
+}
+
+.dots{
+    width: 25px;
+    height: 25px;
+    border: 1px solid gray;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.active{
+    background-color: pink;
+}

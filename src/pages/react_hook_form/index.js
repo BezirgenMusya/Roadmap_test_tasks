@@ -1,83 +1,60 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 import { additionalData } from "../../assets/additionalData";
-import AnswerCompo from "../../components/Answer/index.jsx";
+import Dots from "../../components/Dots";
+import Form from "../../components/Form";
+import { activeQuestionContext } from "../../contexts/activeQuestion"
 
 const ReactHookForm = () => {
-  const [questionNum, setQuestionNum] = useState("firstQuestion");
-  const [result, setResult] = useState({
-    frirstQuestionAnswer: null,
-    secondQuestionAnswer: null,
-  });
-
-  console.log(Object.keys(additionalData.questions));
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    clearErrors,
-  } = useForm({
-    defaultValues:{
+  let { activeQuestion, setActiveQuestion } = useContext(activeQuestionContext);
+  const methods = useForm({
+    defaultValues: {
+      firstQuestion_answer: [],
       secondQuestion_answer: "",
     }
   });
 
-  const onSubmit = (data) => {
-    if (Object.values(data).some((item) => item.length)) {
-      const selectedAnsverId = Object.values(data).findIndex((item) => item.length)
-      setQuestionNum("secondQuestion")
-      if (questionNum === "firstQuestion") {
-        setResult(prev => ({ ...prev, frirstQuestionAnswer: Object.values(data)[selectedAnsverId] }))
-      } else {
-        setResult(prev => ({ ...prev, secondQuestionAnswer: Object.values(data)[selectedAnsverId] }))
+  const onSubmit = ({firstQuestion_answer, secondQuestion_answer}) => {
+    if (Object.values({firstQuestion_answer, secondQuestion_answer}).some((item) => item.length)) {
+      if(firstQuestion_answer.length && activeQuestion !== additionalData.questions.length - 1){
+        setActiveQuestion(++activeQuestion)
       }
+      if(secondQuestion_answer.length){
+        alert("test")
+      }
+      
     } else {
-      setError("requiredOne", { message: "Please select one answer" })
+      methods.setError("requiredOne", { message: "Please select one answer" })
     }
   };
 
   const onChange = (event) => {
-    clearErrors(["requiredOne"])
+    methods.clearErrors(["requiredOne"])
   }
+
 
   return (
     <div>
       <h1>React Hook Form</h1>
-      
+      {Object.keys(additionalData.questions).map((item, id) => {
+        return (
+          <Dots
+            key={id}
+            activeOne={id === activeQuestion}
+            questionsSwicher={setActiveQuestion}
+            questionName={id}
+          />
+        )
+      })}
+      <h3>{additionalData.questions[activeQuestion].title}</h3>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)} onChange={onChange}>
+          <Form key={activeQuestion} activeQuestion={activeQuestion} />
 
-      {
-        result.secondQuestionAnswer?.length
-          ? <div>
-            <h2>Congrats you are fag</h2>
-          </div>
-          : <div>
-            <h3>{additionalData.questions[questionNum].title}</h3>
-
-            <form onSubmit={handleSubmit(onSubmit)} onChange={onChange} >
-              {additionalData.questions[questionNum].answers.map((item, index) => {
-                return (
-                  <AnswerCompo
-                    key={index}
-                    type={item.type}
-                    registerName={item.registerName}
-                    label={item.label}
-                    register={register}
-                    defaultValue={item.defaultValue}
-                  />
-                )
-              })}
-
-              <div>{errors.requiredOne && <span>{errors.requiredOne.message}</span>}</div>
-
-              <input type="submit" value={questionNum === "secondQuestion" ? "See results" : "Next Question"} />
-            </form>
-          </div>
-
-      }
-
-
+          <div>{methods.formState.errors.requiredOne && <span>{methods.formState.errors.requiredOne.message}</span>}</div>
+          <input type="submit" value={activeQuestion === "secondQuestion" ? "See results" : "Next Question"} />
+        </form>
+      </FormProvider>
     </div>
   );
 };
